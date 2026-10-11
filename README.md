@@ -34,3 +34,43 @@ Actions 탭에서 수동 실행도 가능합니다.
 이름, 이메일, 문의 내용은 필수이고 회사/브랜드는 선택입니다.
 접수 내역과 수신 이메일 설정은 Formspree 대시보드에서 관리합니다.
 전송 중 중복 제출을 방지하고, 성공 및 오류 메시지를 표시합니다.
+
+## 강의 52:09~1:12:12 설정
+
+영상 본문/자막에 직접 접근하지 못해 공개 목차의 범위인 외부 서비스와
+AdSense 중 현재 로또 사이트에 적용 가능한 연결을 준비했습니다.
+
+| 항목 | 현재 상태 | 필요한 정보 또는 계정 작업 |
+| --- | --- | --- |
+| Formspree 문의 폼 | 연결·배포 완료 | 실제 수신 메일과 접수 내역은 Formspree에서 확인 |
+| Disqus 댓글 | 코드 준비 완료 | 본인 사이트의 shortname |
+| AdSense | 설치 코드 및 ads.txt 자동 생성 준비 | 본인 게시자 ID, 사이트 등록 및 Google 심사 |
+| AI 학습/추론 | 사용자 요청으로 제외 | 추가하지 않음 |
+
+### 댓글 연결
+
+`site-services.js`의 `disqusShortname`에 Disqus 사이트 shortname을 입력한 뒤
+푸시하면 페이지 하단에 댓글이 표시됩니다. 설정 전에는 댓글 영역을 숨깁니다.
+페이지 식별자를 고정해 번호 추천이나 모드 전환으로 댓글이 분리되지 않게 했습니다.
+댓글 관리와 사용자 권한은 Disqus 관리자 화면에서 설정합니다.
+
+### AdSense 연결
+
+`site-services.js`의 `adsenseClient`에 본인 계정의 `ca-pub-`로 시작하는
+16자리 게시자 ID를 입력하면 빌드 시 공식 광고 스크립트와 계정 메타 태그를
+HTML head에 삽입하고 `_site/ads.txt`를 생성합니다. 빈 값이면 광고 코드를 넣지 않습니다.
+AdSense 사이트 등록, 계정 정보 입력, 심사 요청과 자동 광고 설정은 계정 소유자가 진행해야 합니다.
+코드 설치만으로 심사 승인이나 광고 노출이 보장되지 않습니다.
+
+현재 주소는 프로젝트 하위 경로이므로 생성된 ads.txt 주소는
+`https://wns1691.github.io/project_builders/ads.txt`입니다.
+Google은 도메인 루트의 `/ads.txt`를 확인하므로 도메인을 연결하거나
+`wns1691.github.io` 루트 사이트에 같은 ads.txt를 제공해야 합니다.
+AdSense 가입 URL에는 경로를 넣을 수 없으므로 사용할 도메인도 먼저 확인해야 합니다.
+임의 도메인이나 다른 사람의 게시자 ID는 사용하지 않습니다.
+
+- Disqus 설치: https://help.disqus.com/en/articles/1717112-universal-embed-code
+- AdSense 사이트 연결: https://support.google.com/adsense/answer/7584263
+- ads.txt: https://support.google.com/adsense/answer/12171612
+
+식별자는 공개 설정입니다. API 비밀 키나 비밀번호는 이 파일에 넣지 마세요.

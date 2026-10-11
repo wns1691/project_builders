@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>행운 한 장 · 로또 번호 추천</title>
+<!-- ADSENSE_HEAD -->
+<script src="./site-services.js"></script>
 <script>
 // Apply the saved theme before rendering to avoid a bright flash.
 (() => {
@@ -56,6 +58,12 @@ button:focus-visible{outline-color:var(--focus)}
 :root[data-theme="dark"] #contact-status[data-state="error"]{color:#ffadb5}
 #contact-status[data-state="success"]{color:var(--accent)}
 @media(max-width:520px){.contact-grid{grid-template-columns:1fr;gap:0}}
+
+.comments{text-align:left;margin-top:36px;min-width:0}
+.comments h2{font-size:22px;margin:0 0 8px}
+.comments-intro{margin:0 0 24px}
+#disqus_thread{min-height:120px;color:var(--text)}
+#comments-status{font-size:13px}
 </style>
 </head>
 <body>
@@ -87,6 +95,13 @@ button:focus-visible{outline-color:var(--focus)}
 <p class="hint">* 필수 항목 · 입력한 정보는 문의 확인 및 답변을 위해 Formspree로 전송됩니다.</p>
 <p id="contact-status" role="status" aria-live="polite" aria-atomic="true"></p>
 </form>
+</section>
+<section id="comments-section" class="card comments" aria-labelledby="comments-heading" hidden>
+<h2 id="comments-heading">함께 이야기해요</h2>
+<p class="comments-intro">오늘의 행운 번호나 사이트에 대한 의견을 자유롭게 남겨주세요.</p>
+<p id="comments-status" role="status" aria-live="polite">댓글을 준비하고 있습니다.</p>
+<div id="disqus_thread"></div>
+<noscript>댓글을 보려면 브라우저에서 JavaScript를 활성화해 주세요.</noscript>
 </section>
 </main>
 <footer>모든 번호 조합의 당첨 확률은 같아요. 추천 번호는 재미로 참고해 주세요.<br>행운 한 장 · 작은 기대가 있는 하루</footer>
@@ -193,6 +208,32 @@ contactForm.addEventListener('submit', async (event) => {
     contactForm.setAttribute('aria-busy', 'false');
   }
 });
+</script>
+<script>
+const DISQUS_SHORTNAME = window.SITE_SERVICES?.disqusShortname || '';
+var disqus_config = function () {
+  this.page.url = window.SITE_SERVICES.siteUrl;
+  this.page.identifier = 'project-builders-lotto-home';
+  this.page.title = '행운 한 장 · 로또 번호 추천';
+  this.language = 'ko';
+  this.callbacks.onReady = [function () {
+    document.getElementById('comments-status').hidden = true;
+  }];
+};
+(() => {
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(DISQUS_SHORTNAME)) return;
+  document.getElementById('comments-section').hidden = false;
+  const status = document.getElementById('comments-status');
+  status.textContent = '댓글을 불러오는 중입니다.';
+  const script = document.createElement('script');
+  script.src = 'https://' + DISQUS_SHORTNAME + '.disqus.com/embed.js';
+  script.async = true;
+  script.setAttribute('data-timestamp', String(Date.now()));
+  script.onerror = () => {
+    status.textContent = '댓글을 불러오지 못했습니다. 잠시 후 페이지를 새로고침해 주세요.';
+  };
+  document.body.appendChild(script);
+})();
 </script>
 </body>
 </html>
