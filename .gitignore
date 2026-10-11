@@ -6,3 +6,4 @@ codex-*-result.txt
 *.key
 node_modules/
 .DS_Store
+_site/
