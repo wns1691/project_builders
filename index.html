@@ -3,12 +3,43 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>행운 한 장 · 로또 번호 추천</title>
+<script>
+// Apply the saved theme before rendering to avoid a bright flash.
+(() => {
+  let theme;
+  try { theme = localStorage.getItem('lotto-theme'); } catch {}
+  if (theme !== 'dark' && theme !== 'light') {
+    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.dataset.theme = theme;
+})();
+</script>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f7f8fa;color:#20302c;font-family:system-ui,sans-serif}header{max-width:1000px;margin:auto;padding:28px 24px;font-weight:800;display:flex;align-items:center;gap:10px}.logo{background:#176c50;color:white;padding:5px 10px;border-radius:9px}header small{margin-left:auto;font-weight:400;color:#87928f}main{max-width:700px;margin:65px auto;padding:0 20px;text-align:center}.eyebrow{font-size:11px;letter-spacing:2px;color:#176c50;font-weight:800}h1{font-size:clamp(28px,5vw,42px);letter-spacing:-1.5px;margin:18px 0}p{color:#83908b;font-size:14px;line-height:1.8}.card{margin-top:32px;padding:28px;background:white;border:1px solid #e6ebe8;border-radius:24px;box-shadow:0 12px 40px #20302c05}.top{display:flex;justify-content:space-between;font-size:12px;color:#8a9690}.top strong{color:#34483d}.balls{display:flex;justify-content:center;gap:12px;padding:40px 0 22px}.ball{width:66px;height:66px;display:grid;place-items:center;border-radius:50%;background:#f0f3f2;color:#a0aaa5;font-size:24px;font-weight:800}.yellow{background:#fff1c7;color:#ab7e15}.blue{background:#e1eeff;color:#3974ba}.red{background:#ffe4e5;color:#c65b65}.gray{background:#e8eaf0;color:#72788e}.green{background:#e0f3e5;color:#388356}button{font:inherit;cursor:pointer}#generate{width:100%;margin-top:12px;padding:17px;border:0;border-radius:12px;background:#176c50;color:white;font-size:15px;font-weight:700}#generate:hover{background:#10553e}button:focus-visible{outline:3px solid #95cdb5;outline-offset:4px}.hint{font-size:11px;margin-bottom:0}.history{text-align:left;margin-top:28px}.heading{display:flex;align-items:center;justify-content:space-between}h2{font-size:15px}#clear{background:none;border:0;color:#84918a;font-size:12px}ul{list-style:none;margin:8px 0;padding:0}li{display:flex;align-items:center;gap:8px;padding:14px;background:white;border:1px solid #e6ebe8;border-radius:12px;margin-bottom:8px}.label{flex:1;font-size:12px;color:#87958d}.small{width:32px;height:32px;font-size:12px}#empty{text-align:center;font-size:12px}footer{text-align:center;color:#929e97;font-size:11px;padding:0 20px 30px;line-height:1.8}@media(max-width:520px){main{margin-top:35px}.card{padding:24px 14px}.balls{gap:7px}.ball{width:43px;height:43px;font-size:19px}.small{width:28px;height:28px;font-size:12px}}
+
+:root{color-scheme:light;--page:#f7f8fa;--surface:#fff;--text:#20302c;--muted:#65746c;--border:#e6ebe8;--accent:#176c50;--accent-hover:#10553e;--button-text:#fff;--ball-bg:#f0f3f2;--ball-text:#75827b;--focus:#95cdb5}
+:root[data-theme="dark"]{color-scheme:dark;--page:#111a17;--surface:#1b2822;--text:#ecf3ef;--muted:#adbdb3;--border:#34483d;--accent:#91d8b6;--accent-hover:#b0e7cd;--button-text:#12271d;--ball-bg:#2c3e34;--ball-text:#c1d0c7;--focus:#91d8b6}
+body{background:var(--page);color:var(--text)}
+.card,li{background:var(--surface);border-color:var(--border)}
+p,.top,header small,#clear,.label,footer{color:var(--muted)}
+.top strong{color:var(--text)}
+.eyebrow{color:var(--accent)}
+.ball:not(.yellow):not(.blue):not(.red):not(.gray):not(.green){background:var(--ball-bg);color:var(--ball-text)}
+#generate{background:var(--accent);color:var(--button-text)}
+#generate:hover{background:var(--accent-hover)}
+button:focus-visible{outline-color:var(--focus)}
+#theme-toggle{display:flex;align-items:center;gap:6px;min-height:40px;padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-size:12px;white-space:nowrap}
+#theme-toggle:hover{border-color:var(--accent)}
+:root[data-theme="dark"] .yellow{background:#4b3e1d;color:#ffe09a}
+:root[data-theme="dark"] .blue{background:#233c56;color:#a9cfff}
+:root[data-theme="dark"] .red{background:#4b2d35;color:#ffb8bf}
+:root[data-theme="dark"] .gray{background:#363b4a;color:#d1d5e5}
+:root[data-theme="dark"] .green{background:#274738;color:#afe3bf}
+@media(max-width:520px){header{flex-wrap:wrap;padding:20px 18px;gap:8px}header small{font-size:10px}#theme-toggle{padding:8px;font-size:11px}}
 </style>
 </head>
 <body>
-<header><span class="logo" aria-hidden="true">✦</span>행운 한 장<small>LOTTO 6 / 45</small></header>
+<header><span class="logo" aria-hidden="true">✦</span>행운 한 장<small>LOTTO 6 / 45</small><button id="theme-toggle" type="button" aria-label="다크 모드" aria-pressed="false"><span id="theme-icon" aria-hidden="true">☾</span><span id="theme-label">다크 모드</span></button></header>
 <main>
 <div class="eyebrow">A LITTLE MOMENT OF LUCK</div>
 <h1>오늘의 행운을 뽑아보세요.</h1>
@@ -24,6 +55,20 @@
 </main>
 <footer>모든 번호 조합의 당첨 확률은 같아요. 추천 번호는 재미로 참고해 주세요.<br>행운 한 장 · 작은 기대가 있는 하루</footer>
 <script>
+const themeToggle = document.getElementById('theme-toggle');
+function updateThemeButton() {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  themeToggle.setAttribute('aria-pressed', String(dark));
+  document.getElementById('theme-icon').textContent = dark ? '☀' : '☾';
+  document.getElementById('theme-label').textContent = dark ? '화이트 모드' : '다크 모드';
+}
+updateThemeButton();
+themeToggle.addEventListener('click', () => {
+  const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = theme;
+  try { localStorage.setItem('lotto-theme', theme); } catch {}
+  updateThemeButton();
+});
 const history = [];
 const colors = ['yellow', 'blue', 'red', 'gray', 'green'];
 function randomBelow(limit) {
