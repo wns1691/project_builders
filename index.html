@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>행운 한 장 · 로또 번호 추천</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f7f8fa;color:#20302c;font-family:system-ui,sans-serif}header{max-width:1000px;margin:auto;padding:28px 24px;font-weight:800;display:flex;align-items:center;gap:10px}.logo{background:#176c50;color:white;padding:5px 10px;border-radius:9px}header small{margin-left:auto;font-weight:400;color:#87928f}main{max-width:700px;margin:65px auto;padding:0 20px;text-align:center}.eyebrow{font-size:11px;letter-spacing:2px;color:#176c50;font-weight:800}h1{font-size:clamp(28px,5vw,42px);letter-spacing:-1.5px;margin:18px 0}p{color:#83908b;font-size:14px;line-height:1.8}.card{margin-top:32px;padding:28px;background:white;border:1px solid #e6ebe8;border-radius:24px;box-shadow:0 12px 40px #20302c05}.top{display:flex;justify-content:space-between;font-size:12px;color:#8a9690}.top strong{color:#34483d}.balls{display:flex;justify-content:center;gap:12px;padding:40px 0 22px}.ball{width:66px;height:66px;display:grid;place-items:center;border-radius:50%;background:#f0f3f2;color:#a0aaa5;font-size:24px;font-weight:800}.yellow{background:#fff1c7;color:#ab7e15}.blue{background:#e1eeff;color:#3974ba}.red{background:#ffe4e5;color:#c65b65}.gray{background:#e8eaf0;color:#72788e}.green{background:#e0f3e5;color:#388356}button{font:inherit;cursor:pointer}#generate{width:100%;margin-top:12px;padding:17px;border:0;border-radius:12px;background:#176c50;color:white;font-size:15px;font-weight:700}#generate:hover{background:#10553e}button:focus-visible{outline:3px solid #95cdb5;outline-offset:4px}.hint{font-size:11px;margin-bottom:0}.history{text-align:left;margin-top:28px}.heading{display:flex;align-items:center;justify-content:space-between}h2{font-size:15px}#clear{background:none;border:0;color:#84918a;font-size:12px}ul{list-style:none;margin:8px 0;padding:0}li{display:flex;align-items:center;gap:8px;padding:14px;background:white;border:1px solid #e6ebe8;border-radius:12px;margin-bottom:8px}.label{flex:1;font-size:12px;color:#87958d}.small{width:32px;height:32px;font-size:12px}#empty{text-align:center;font-size:12px}footer{text-align:center;color:#929e97;font-size:11px;padding:0 20px 30px;line-height:1.8}@media(max-width:520px){main{margin-top:35px}.card{padding:24px 14px}.balls{gap:7px}.ball{width:43px;height:43px;font-size:19px}.small{width:28px;height:28px;font-size:12px}}
+</style>
+</head>
+<body>
+<header><span class="logo" aria-hidden="true">✦</span>행운 한 장<small>LOTTO 6 / 45</small></header>
+<main>
+<div class="eyebrow">A LITTLE MOMENT OF LUCK</div>
+<h1>오늘의 행운을 뽑아보세요.</h1>
+<p>어떤 번호를 고를지 고민되나요?<br>버튼 한 번으로 나만의 로또 번호 6개를 만나보세요.</p>
+<section class="card" aria-label="로또 번호 추천">
+<div class="top"><strong>나의 행운 번호</strong><span>중복 없이 · 오름차순</span></div>
+<div id="numbers" class="balls" aria-label="추천 번호"><span class="ball">?</span><span class="ball">?</span><span class="ball">?</span><span class="ball">?</span><span class="ball">?</span><span class="ball">?</span></div>
+<p id="status" role="status">당신의 행운 번호가 기다리고 있어요.</p>
+<button id="generate" type="button">✦ &nbsp; 행운 번호 추천받기</button>
+<p class="hint">1~45 사이의 번호 6개를 무작위로 추천해요.</p>
+</section>
+<section class="history" aria-label="최근 추천 기록"><div class="heading"><h2>최근 추천 기록</h2><button id="clear" type="button" hidden>기록 지우기</button></div><p id="empty">추천받은 번호가 여기에 모여요.</p><ul id="history-list"></ul></section>
+</main>
+<footer>모든 번호 조합의 당첨 확률은 같아요. 추천 번호는 재미로 참고해 주세요.<br>행운 한 장 · 작은 기대가 있는 하루</footer>
+<script>
+const history = [];
+const colors = ['yellow', 'blue', 'red', 'gray', 'green'];
+function randomBelow(limit) {
+  const data = new Uint32Array(1);
+  const ceiling = Math.floor(4294967296 / limit) * limit;
+  do { crypto.getRandomValues(data); } while (data[0] >= ceiling);
+  return data[0] % limit;
+}
+function pickNumbers() {
+  const pool = Array.from({length:45}, (_, i) => i + 1);
+  for (let i = 44; i > 0; i--) {
+    const j = randomBelow(i + 1);
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, 6).sort((a,b) => a-b);
+}
+function ball(n, small = false) {
+  const element = document.createElement('span');
+  element.className = 'ball ' + colors[Math.floor((n-1)/10)] + (small ? ' small' : '');
+  element.textContent = n;
+  return element;
+}
+function renderHistory() {
+  const list = document.getElementById('history-list');
+  list.replaceChildren();
+  history.forEach((numbers, i) => {
+    const row = document.createElement('li');
+    const label = document.createElement('span');
+    label.className = 'label';
+    label.textContent = i === 0 ? '방금 추천' : '이전 추천';
+    row.append(label, ...numbers.map(n => ball(n, true)));
+    list.append(row);
+  });
+  document.getElementById('empty').hidden = history.length > 0;
+  document.getElementById('clear').hidden = history.length === 0;
+}
+document.getElementById('generate').addEventListener('click', () => {
+  const numbers = pickNumbers();
+  document.getElementById('numbers').replaceChildren(...numbers.map(n => ball(n)));
+  document.getElementById('status').textContent = '추천 번호: ' + numbers.join(', ') + ' · 행운을 빌어요!';
+  document.getElementById('generate').textContent = '↻  새로운 번호 추천받기';
+  history.unshift(numbers);
+  if (history.length > 5) history.pop();
+  renderHistory();
+});
+document.getElementById('clear').addEventListener('click', () => { history.length = 0; renderHistory(); });
+</script>
+</body>
+</html>
